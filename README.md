@@ -15,6 +15,24 @@ so that TightVNC could focus on Windows platforms.  TigerVNC supports a variant
 of Tight encoding that is greatly accelerated by the use of the libjpeg-turbo
 JPEG codec.
 
+# Building
+
+To build TigerVNC for Windows on ARM32, you need all the same libraries listed in [BUILDING.txt](BUILDING.txt), which are all buildable by the ARM32 Windows MXE repository, as well as Ninja and sed. Then to build it, you run these commands in the root directory:
+
+```c
+mkdir build
+cd build
+// You can use normal CMake, MXE makes a custom CMake
+armv7-w64-mingw32-cmake -GNinja ..
+// ^ If you want TLS ^
+armv7-w64-mingw32-cmake -GNinja -DENABLE_GNUTLS=OFF ..
+// ^ If you do not want TLS ^
+// Ninja is used thanks to some weird linker flags being added and it being easier to edit
+sed -i 's/-lgcc_eh -lgcc/-lmingw32/g' rules.ninja
+sed -i 's/-nodefaultlibs/-mwindows/g' build.ninja
+ninja
+ninja install
+```
 
 Legal
 =====
